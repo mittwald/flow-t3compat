@@ -9,6 +9,8 @@ namespace Mw\T3Compat\Domain\Model;
  *                                                                        */
 
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Mw\T3Compat\Exception\IncompatibilityException;
 use TYPO3\Flow\Annotations as Flow;
@@ -85,11 +87,25 @@ class FrontendUser
     protected $fax;
 
 
+    /**
+     * @var Collection<FrontendUserGroup>
+     * @ORM\ManyToMany
+     */
+    protected $userGroups;
+
+
 
     static public function fromAccount(Account $account)
     {
         $user          = new FrontendUser();
         $user->account = $account;
+    }
+
+
+
+    public function __construct()
+    {
+        $this->userGroups = new ArrayCollection();
     }
 
 
@@ -398,5 +414,24 @@ class FrontendUser
     }
 
 
+
+    public function setUsergroup(Collection $usergroups)
+    {
+        $this->userGroups = $usergroups;
+    }
+
+
+
+    public function addUsergroup(FrontendUserGroup $userGroup)
+    {
+        $this->userGroups->add($userGroup);
+    }
+
+
+
+    public function removeUsergroup(FrontendUserGroup $userGroup)
+    {
+        $this->userGroups->removeElement($userGroup);
+    }
 
 }

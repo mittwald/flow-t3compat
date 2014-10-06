@@ -1,0 +1,14 @@
+{
+    "name": "mittwald-typo3/flow-t3compat",
+    "type": "typo3-flow-package",
+    "description": "Compatibility classes for using TYPO3 CMS code in TYPO3 Flow",
+    "require": {
+        "typo3/flow": "*",
+        "typo3/party": "*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mw\\T3Compat": "Classes"
+        }
+    }
+}

@@ -1,18 +1,18 @@
 <?php
 namespace Mw\T3Compat\Utility;
 
-    /**
-     * This file is part of the TYPO3 CMS project.
-     *
-     * It is free software; you can redistribute it and/or modify it under
-     * the terms of the GNU General Public License, either version 2
-     * of the License, or any later version.
-     *
-     * For the full copyright and license information, please read the
-     * LICENSE.txt file that was distributed with this source code.
-     *
-     * The TYPO3 project - inspiring people to share!
-     */
+/**
+ * This file is part of the TYPO3 CMS project.
+ *
+ * It is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU General Public License, either version 2
+ * of the License, or any later version.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ *
+ * The TYPO3 project - inspiring people to share!
+ */
 use Mw\T3Compat\Exception\IncompatibilityException;
 
 /**
@@ -352,6 +352,7 @@ class GeneralUtility
      *
      * @param string  $theFile    Filepath of image file
      * @param boolean $output_png If set, then input file is converted to PNG, otherwise to GIF
+     * @throws IncompatibilityException
      * @return string If the new image file exists, its filepath is returned
      */
     static public function read_png_gif($theFile, $output_png = FALSE)
@@ -594,7 +595,6 @@ class GeneralUtility
     static public function normalizeIPv6($address)
     {
         $normalizedAddress = '';
-        $stageOneAddress   = '';
         // According to RFC lowercase-representation is recommended
         $address = strtolower($address);
         // Normalized representation has 39 characters (0000:0000:0000:0000:0000:0000:0000:0000)
@@ -903,7 +903,6 @@ class GeneralUtility
      */
     static public function int_from_ver($verNumberStr)
     {
-        self::logDeprecatedFunction();
         return VersionNumberUtility::convertVersionNumberToInteger($verNumberStr);
     }
 
@@ -915,22 +914,10 @@ class GeneralUtility
      *
      * @param string $verNumberStr Minimum branch number required (format x.y / e.g. "4.0" NOT "4.0.0"!)
      * @return boolean Returns TRUE if this setup is compatible with the provided version number
-     * @todo Still needs a function to convert versions to branches
      */
     static public function compat_version($verNumberStr)
     {
-        $currVersionStr = $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] ? $GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version'] : TYPO3_branch;
-        if (VersionNumberUtility::convertVersionNumberToInteger(
-                $currVersionStr
-            ) < VersionNumberUtility::convertVersionNumberToInteger($verNumberStr)
-        )
-        {
-            return FALSE;
-        }
-        else
-        {
-            return TRUE;
-        }
+        return TRUE;
     }
 
 
@@ -973,7 +960,6 @@ class GeneralUtility
     {
         $hashAlgorithm = 'sha1';
         $hashBlocksize = 64;
-        $hmac          = '';
         $secret        = $GLOBALS['TYPO3_CONF_VARS']['SYS']['encryptionKey'] . $additionalSecret;
         if (extension_loaded('hash') && function_exists('hash_hmac') && function_exists('hash_algos') && in_array(
                 $hashAlgorithm,
@@ -1552,6 +1538,7 @@ class GeneralUtility
      * Returns an ASCII string (punicode) representation of $value
      *
      * @param string $value
+     * @throws IncompatibilityException
      * @return string An ASCII encoded (punicode) string
      */
     static public function idnaEncode($value)

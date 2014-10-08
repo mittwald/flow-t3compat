@@ -14,6 +14,7 @@ namespace Mw\T3Compat\Utility;
  * The TYPO3 project - inspiring people to share!
  */
 use Mw\T3Compat\Exception\IncompatibilityException;
+use TYPO3\Flow\Utility\Files;
 
 /**
  * The legendary "t3lib_div" class - Miscellaneous functions for general purpose.
@@ -2934,6 +2935,7 @@ class GeneralUtility
         {
             return self::get_tag_attributes($match[1]);
         }
+        return NULL;
     }
 
 
@@ -2947,33 +2949,6 @@ class GeneralUtility
      */
     static public function minifyJavaScript($script, &$error = '')
     {
-        if (is_array($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript']))
-        {
-            $fakeThis = FALSE;
-            foreach ($GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_div.php']['minifyJavaScript'] as $hookMethod)
-            {
-                try
-                {
-                    $parameters = array('script' => $script);
-                    $script     = static::callUserFunction($hookMethod, $parameters, $fakeThis);
-                }
-                catch (\Exception $e)
-                {
-                    $errorMessage = 'Error minifying java script: ' . $e->getMessage();
-                    $error .= $errorMessage;
-                    static::devLog(
-                        $errorMessage,
-                        'TYPO3\\CMS\\Core\\Utility\\GeneralUtility',
-                        2,
-                        array(
-                            'JavaScript'  => $script,
-                            'Stack trace' => $e->getTrace(),
-                            'hook'        => $hookMethod
-                        )
-                    );
-                }
-            }
-        }
         return $script;
     }
 
@@ -3250,65 +3225,6 @@ Connection: close
     static public function fixPermissions($path, $recursive = FALSE)
     {
         $result = FALSE;
-        // Make path absolute
-        if (!self::isAbsPath($path))
-        {
-            $path = self::getFileAbsFileName($path, FALSE);
-        }
-        if (self::isAllowedAbsPath($path))
-        {
-            if (@is_file($path))
-            {
-                $targetFilePermissions = isset($GLOBALS['TYPO3_CONF_VARS']['BE']['fileCreateMask'])
-                    ? octdec($GLOBALS['TYPO3_CONF_VARS']['BE']['fileCreateMask'])
-                    : octdec('0644');
-                // "@" is there because file is not necessarily OWNED by the user
-                $result = @chmod($path, $targetFilePermissions);
-            }
-            elseif (@is_dir($path))
-            {
-                $targetDirectoryPermissions = isset($GLOBALS['TYPO3_CONF_VARS']['BE']['folderCreateMask'])
-                    ? octdec($GLOBALS['TYPO3_CONF_VARS']['BE']['folderCreateMask'])
-                    : octdec('0755');
-                // "@" is there because file is not necessarily OWNED by the user
-                $result = @chmod($path, $targetDirectoryPermissions);
-            }
-            // Set createGroup if not empty
-            if (
-                isset($GLOBALS['TYPO3_CONF_VARS']['BE']['createGroup'])
-                && strlen($GLOBALS['TYPO3_CONF_VARS']['BE']['createGroup']) > 0
-            )
-            {
-                // "@" is there because file is not necessarily OWNED by the user
-                $changeGroupResult = @chgrp($path, $GLOBALS['TYPO3_CONF_VARS']['BE']['createGroup']);
-                $result            = $changeGroupResult ? $result : FALSE;
-            }
-            // Call recursive if recursive flag if set and $path is directory
-            if ($recursive && @is_dir($path))
-            {
-                $handle = opendir($path);
-                while (($file = readdir($handle)) !== FALSE)
-                {
-                    $recursionResult = NULL;
-                    if ($file !== '.' && $file !== '..')
-                    {
-                        if (@is_file(($path . '/' . $file)))
-                        {
-                            $recursionResult = self::fixPermissions($path . '/' . $file);
-                        }
-                        elseif (@is_dir(($path . '/' . $file)))
-                        {
-                            $recursionResult = self::fixPermissions($path . '/' . $file, TRUE);
-                        }
-                        if (isset($recursionResult) && !$recursionResult)
-                        {
-                            $result = FALSE;
-                        }
-                    }
-                }
-                closedir($handle);
-            }
-        }
         return $result;
     }
 
@@ -3339,7 +3255,7 @@ Connection: close
      */
     static public function mkdir($newFolder)
     {
-        \TYPO3\Flow\Utility\Files::createDirectoryRecursively($newFolder);
+        Files::createDirectoryRecursively($newFolder);
     }
 
 
@@ -3356,7 +3272,7 @@ Connection: close
      */
     static public function mkdir_deep($directory, $deepDirectory = '')
     {
-        \TYPO3\Flow\Utility\Files::createDirectoryRecursively($directory);
+        Files::createDirectoryRecursively($directory);
     }
 
 
@@ -3408,11 +3324,11 @@ Connection: close
     {
         if ($removeNonEmpty)
         {
-            \TYPO3\Flow\Utility\Files::removeDirectoryRecursively($path);
+            Files::removeDirectoryRecursively($path);
         }
         else
         {
-            \TYPO3\Flow\Utility\Files::removeEmptyDirectoriesOnPath($path);
+            Files::removeEmptyDirectoriesOnPath($path);
         }
     }
 

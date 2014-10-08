@@ -1,6 +1,7 @@
 {
     "name": "mittwald-typo3/flow-t3compat",
     "type": "typo3-flow-package",
+    "license": "MIT",
     "description": "Compatibility classes for using TYPO3 CMS code in TYPO3 Flow",
     "require": {
         "typo3/flow": "*",

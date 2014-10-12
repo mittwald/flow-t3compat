@@ -3,7 +3,6 @@ php:
   - 5.6
   - 5.5
   - 5.4
-  - hhvm
 install:
   - composer install --prefer-dist
-script: bin/phing
+script: vendor/bin/phing

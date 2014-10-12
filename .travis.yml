@@ -6,4 +6,4 @@ php:
   - hhvm
 install:
   - composer install --prefer-dist
-script: bin/phing
+script: vendor/bin/phing

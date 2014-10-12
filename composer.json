@@ -7,6 +7,9 @@
         "typo3/flow": "*",
         "typo3/party": "*"
     },
+    "require-dev": {
+        "phing/phing": "*"
+    },
     "autoload": {
         "psr-0": {
             "Mw\\T3Compat": "Classes"

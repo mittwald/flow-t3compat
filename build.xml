@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Mw.T3Compat" default="ci">
+    <target name="syntax-check">
+        <echo msg="performing syntax check on all files in ${project.basedir}/Classes."/>
+        <apply executable="php" parallel="false" checkreturn="true">
+            <arg value="-l"/>
+            <fileset dir="${project.basedir}/Classes">
+                <include name="**/*.php"/>
+            </fileset>
+        </apply>
+    </target>
+
+    <target name="ci" depends="syntax-check">
+
+    </target>
+</project>

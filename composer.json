@@ -10,6 +10,8 @@
     "require-dev": {
         "phing/phing": "*"
     },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "autoload": {
         "psr-0": {
             "Mw\\T3Compat": "Classes"

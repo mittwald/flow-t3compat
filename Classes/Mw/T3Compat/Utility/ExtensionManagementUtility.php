@@ -19,6 +19,8 @@ use TYPO3\Flow\Package\PackageManagerInterface;
  *
  * @package    Mw\T3Compat
  * @subpackage Utility
+ *
+ * @Flow\Scope("singleton")
  */
 class ExtensionManagementUtility {
 

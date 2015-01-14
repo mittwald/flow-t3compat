@@ -1,6 +1,19 @@
 <?php
 namespace Mw\T3Compat\Database;
 
+/*                                                                        *
+ * This script belongs to the TYPO3 Flow package "Mw.T3Compat".           *
+ *                                                                        *
+ * (C) 2015 Martin Helmich <m.helmich@mittwald.de>                        *
+ *          Mittwald CM Service GmbH & Co. KG                             *
+ *                                                                        */
+
+/**
+ * Trait that contains the query building aspect of the database compatibility layer.
+ *
+ * @package Mw\T3Compat
+ * @subpackage Database
+ */
 trait QueryBuildingTrait {
 
 	/**

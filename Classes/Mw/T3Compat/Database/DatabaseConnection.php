@@ -206,6 +206,10 @@ interface DatabaseConnection {
 
 	public function debug($func, $query = '');
 
-	public function debug_check_recordset($res);
+	/**
+	 * @param Statement $res
+	 * @return bool
+	 */
+	public function debug_check_recordset(Statement $res);
 
 }

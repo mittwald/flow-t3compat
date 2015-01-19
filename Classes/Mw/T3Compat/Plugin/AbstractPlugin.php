@@ -1,10 +1,23 @@
 <?php
 namespace Mw\T3Compat\Plugin;
 
+/*                                                                        *
+ * This script belongs to the TYPO3 Flow package "Mw.T3Compat".           *
+ *                                                                        *
+ * (C) 2015 Martin Helmich <m.helmich@mittwald.de>                        *
+ *          Mittwald CM Service GmbH & Co. KG                             *
+ *                                                                        */
+
 use Mw\T3Compat\ContentObject\ContentObjectRenderer;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Mvc\ActionRequest;
 
+/**
+ * Abstract base class for plugins.
+ *
+ * @package Mw\T3Compat
+ * @subpackage Plugin
+ */
 abstract class AbstractPlugin {
 
 	/**
@@ -36,7 +49,7 @@ abstract class AbstractPlugin {
 
 	public function main($content, $conf) { }
 
-	public function __flowBridge_initialize(array $configuration, ActionRequest $request) {
+	public function __plugin_initialize(array $configuration, ActionRequest $request) {
 		$this->config  = $configuration;
 		$this->conf    = $configuration;
 		$this->cObj    = new ContentObjectRenderer();

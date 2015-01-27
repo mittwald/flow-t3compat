@@ -11,6 +11,7 @@ namespace Mw\T3Compat\Plugin;
 use Mw\T3Compat\ContentObject\ContentObjectRenderer;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Mvc\ActionRequest;
+use TYPO3\Flow\Mvc\Controller\ControllerContext;
 
 /**
  * Abstract base class for plugins.
@@ -31,29 +32,43 @@ abstract class AbstractPlugin {
 	public $cObj;
 
 	/**
+	 * @var array
+	 */
+	public $piVars = [];
+
+	/**
 	 * @var \TYPO3\Flow\Object\ObjectManagerInterface
 	 * @Flow\Inject
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \TYPO3\Flow\Mvc\Routing\UriBuilder
-	 * @Flow\Inject
-	 */
-	protected $uriBuilder;
-
-	/**
 	 * @var \TYPO3\Flow\Mvc\ActionRequest
 	 */
 	protected $request;
 
+	/**
+	 * @var ControllerContext
+	 */
+	private $context;
+
+	public function __construct() {
+		// Can be empty; but some plugins might call parent::__construct() inside their constructors.
+	}
+
 	public function main($content, $conf) { }
 
-	public function __plugin_initialize(array $configuration, ActionRequest $request) {
+	/**
+	 * @param array             $configuration
+	 * @param ActionRequest     $request
+	 * @param ControllerContext $context
+	 */
+	public function __plugin_initialize(array $configuration, ActionRequest $request, ControllerContext $context) {
 		$this->config  = $configuration;
 		$this->conf    = $configuration;
 		$this->cObj    = new ContentObjectRenderer();
 		$this->request = $request;
+		$this->context = $context;
 	}
 
 	protected function pi_setPiVarDefaults() {
@@ -65,15 +80,31 @@ abstract class AbstractPlugin {
 	}
 
 	protected function pi_wrapInBaseClass($content) {
-		return '<!-- Wrapped by Mw.TYPO3.PluginBridge package. -->' . PHP_EOL . $content;
+		return '<!-- Wrapped by Mw.T3Compat package. -->' . PHP_EOL . $content;
 	}
 
+	/**
+	 * @param        $pageId
+	 * @param string $target
+	 * @param array  $parameters
+	 * @return string
+	 */
 	protected function pi_getPageLink($pageId, $target = '_self', array $parameters = array()) {
-		$this->uriBuilder->setRequest($this->request);
-
-		return $this->uriBuilder
+		return $this->context->getUriBuilder()
+			->reset()
 			->setArguments($parameters)
 			->uriFor('index');
+	}
+
+	/**
+	 * @param $string
+	 * @param $pm_id
+	 * @param $param
+	 * @param $array
+	 * @return string
+	 */
+	protected function pi_linkToPage($string, $pm_id, $param, $array) {
+		// TODO
 	}
 
 }

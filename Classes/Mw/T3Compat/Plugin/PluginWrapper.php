@@ -32,7 +32,7 @@ class PluginWrapper {
 
 	public function wrapPlugin(AbstractPlugin $plugin, array $configuration = array()) {
 		$content = '';
-		$plugin->__plugin_initialize($configuration, $this->controllerContext->getRequest());
+		$plugin->__plugin_initialize($configuration, $this->controllerContext->getRequest(), $this->controllerContext);
 
 		if (is_callable([$plugin, 'main'])) {
 			$oldErrorReporting = error_reporting();
